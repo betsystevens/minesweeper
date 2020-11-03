@@ -1,0 +1,92 @@
+* {
+  --brickSize: 35px;
+  --brickBorderSize: 4px;
+  --cellSize: 43px;
+  --mineColor: darkred;
+} 
+
+body {
+  background: black;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+div {
+  height: var(--brickSize);
+  width: var(--brickSize);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+table td {
+  min-width: var(--brickSize);
+  height: var(--brickSize);
+  font-family: monospace;
+  font-weight: 700;
+  text-align: center;
+  padding: 0 !important;
+  font-size: 16px !important;
+  color: transparent;
+  background-color: white;
+}
+table {
+  user-select: none;
+  padding: 0;
+  margin-bottom: 25px;
+}
+/* table tr:hover td { */
+td:hover {
+  background-color: #BBB; 
+}
+table tr:hover {
+  color: #333;
+}
+table.game-over table {
+  pointer-events: none;
+}
+
+.detonated {
+  /* background-color: #DDD !important;  */
+  background-color: #DDD; 
+  width: var(--cellSize);
+  height: var(--cellSize);
+  font-size: 10px !important;
+  color: transparent;
+}
+.mine:before {
+  color: var(--mineColor);
+  content: "coronavirus";
+  font-family: "Material Icons", monospace;
+  font-size: 30px;
+  text-align: center;
+}
+.neighbor:before {
+  /* color: var(--mineColor); */
+  color: #222;
+  content: "1";
+  font-family: monospace;
+  font-size: 24px;
+  text-align: center;
+}
+.brick {
+  /* background-color: #999 !important;  */
+  background-color: #999; 
+  border-top: 4px solid #CCC;
+  border-left: 4px solid #AAA;
+  border-bottom: 4px solid #666;
+  border-right: 4px solid #888;
+  font-size: 10px !important;
+  color: transparent;
+}
+.flag:before {
+  color: red;
+  /* vertical-align: top; */
+  content: "flag";
+  font-family: "Material Icons", monospace;
+  font-size: 24px;
+  text-align: center;
+}
