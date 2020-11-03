@@ -1,15 +1,44 @@
 'use strict'
 
-let table = document.getElementById("grid");
-let fieldSize = 10;
+const fieldSize = 10;
 
-for (let i=0; i<fieldSize; i++) {
-  let row = table.insertRow(i);
-    for (let j=0; j<fieldSize; j++) {
+/******************************** */
+/* create the table in the dom    */
+/******************************** */
+function makeTable(size) {
+  const table = document.getElementsByTagName("table")[0];
+  for (let i=0; i<size; i++) {
+    let row = table.insertRow(i);
+    for (let j=0; j<size; j++) {
       let cell = row.insertCell(j);
       cell.className = "brick";
     }
-};
+  }
+  return table;
+}
+
+const table = makeTable(fieldSize);
+table.addEventListener("click", handleClick, false);
+table.addEventListener("contextmenu", handleRightClick, false);
+
+function handleClick(e) {
+  let row = e.target.parentElement.rowIndex;
+  let column = e.target.cellIndex;
+    if (field[row][column] === BOMB_ENUM) {
+    e.target.className = "detonated mine";
+  } else {
+    e.target.className = "detonated neighbor";
+  }
+}
+
+function handleRightClick(e) {
+  e.preventDefault();
+  e.target.className = "brick flag";
+}
+
+/******************************** */
+/* place the bombs */
+/******************************** */
 
 const randomPoint = function(max) {
   return function() {
@@ -21,36 +50,17 @@ const randomPoint = function(max) {
 let getPoint = randomPoint(fieldSize);
 let pointStrings = [];
 let field = [];
-for (let i=0; i<fieldSize; i++){
-  let row = [];
-  for (let j=0; j<fieldSize; j++){
-    row.push(0);
-  }
-  field.push(row);
+for (let i = 0; i < fieldSize; i++){
+  field.push([]);
 }
-
-for (let i=0; i<fieldSize; i++) {
+/* randomly place bombs */
+const bombCount = 15;
+const BOMB_ENUM = 7;
+for (let i=0; i<bombCount; i++) {
   let p = getPoint();
-  field[p[0]][p[1]] = 7;
+  field[p[0]][p[1]] = BOMB_ENUM;
 }
 
-function handleClick(e) {
-  let row = e.target.parentElement.rowIndex;
-  let column = e.target.cellIndex;
-  if (field[row][column] === 7) {
-    e.target.className = "detonated mine";
-  } else {
-    e.target.className = "detonated neighbor";
-  }
-}
-
-function handleRightClick(e) {
-  e.preventDefault();
-  e.target.className = "brick flag";
-}
-const el = document.getElementById("grid");
-el.addEventListener("click", handleClick, false);
-el.addEventListener("contextmenu", handleRightClick, false);
-
+console.log(field);
 
 
