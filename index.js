@@ -38,9 +38,9 @@ function handleClick(e) {
   let row = e.target.parentElement.rowIndex;
   let column = e.target.cellIndex;
   if (field[row][column] === 7) {
-    e.target.className = "brick mine";
+    e.target.className = "detonated mine";
   } else {
-    e.target.className = "neighbor";
+    e.target.className = "detonated neighbor";
   }
 }
 
