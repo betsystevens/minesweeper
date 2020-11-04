@@ -1,6 +1,7 @@
 'use strict'
 
 const fieldSize = 10;
+const BOMB_ENUM = 7;
 
 /******************************** */
 /* create the table in the dom    */
@@ -47,19 +48,33 @@ const randomPoint = function(max) {
     return [x,y]; 
   }
 }
-let getPoint = randomPoint(fieldSize);
-let pointStrings = [];
-let field = [];
-for (let i = 0; i < fieldSize; i++){
-  field.push([]);
+const getPoint = randomPoint(fieldSize);
+
+const virtualField = function(size, bombs) {
+  return {
+    size, 
+    field: [],
+    bombCount: bombs,
+    init() {
+      for (let i = 0; i < this.size; i++){
+        this.field.push([]);
+      }
+      return this;
+    },
+    getField() {
+      return this.field;
+    },
+    /* randomly place bombs */
+    placeBombs(){
+      for (let i=0; i < this.bombCount; i++) {
+        let p = getPoint();
+        this.field[p[0]][p[1]] = BOMB_ENUM;
+      }
+      return this;
+    }
+  }
 }
-/* randomly place bombs */
-const bombCount = 15;
-const BOMB_ENUM = 7;
-for (let i=0; i<bombCount; i++) {
-  let p = getPoint();
-  field[p[0]][p[1]] = BOMB_ENUM;
-}
+const field = virtualField(fieldSize, 15).init().placeBombs().getField();
 
 console.log(field);
 
