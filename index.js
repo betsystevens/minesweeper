@@ -1,6 +1,6 @@
 'use strict'
 
-const fieldSize = 10;
+const fieldSize = 5;
 const BOMB_ENUM = 7;
 
 /******************************** */
@@ -50,23 +50,20 @@ const randomPoint = function(max) {
 }
 const getPoint = randomPoint(fieldSize);
 
-const virtualField = function(size, bombs) {
+const virtualField = function(size) {
+  let field = [];
+  for (let i = 0; i < size; i++){
+    field.push([]);
+  }
   return {
     size, 
-    field: [],
-    bombCount: bombs,
-    init() {
-      for (let i = 0; i < this.size; i++){
-        this.field.push([]);
-      }
-      return this;
-    },
+    field,
     getField() {
       return this.field;
     },
     /* randomly place bombs */
-    placeBombs(){
-      for (let i=0; i < this.bombCount; i++) {
+    placeBombs(bombCount){
+      for (let i=0; i < bombCount; i++) {
         let p = getPoint();
         this.field[p[0]][p[1]] = BOMB_ENUM;
       }
@@ -74,7 +71,7 @@ const virtualField = function(size, bombs) {
     }
   }
 }
-const field = virtualField(fieldSize, 15).init().placeBombs().getField();
+const field = virtualField(fieldSize).placeBombs(15).getField();
 
 console.log(field);
 
