@@ -3,9 +3,7 @@
 const fieldSize = 5;
 const BOMB_ENUM = 7;
 
-/******************************** */
-/* create the table in the dom    */
-/******************************** */
+/* add rows of bricks to the dom table */
 function makeTable(size) {
   const table = document.getElementsByTagName("table")[0];
   for (let i=0; i<size; i++) {
@@ -18,29 +16,7 @@ function makeTable(size) {
   return table;
 }
 
-const table = makeTable(fieldSize);
-table.addEventListener("click", handleClick, false);
-table.addEventListener("contextmenu", handleRightClick, false);
-
-function handleClick(e) {
-  let row = e.target.parentElement.rowIndex;
-  let column = e.target.cellIndex;
-    if (field[row][column] === BOMB_ENUM) {
-    e.target.className = "detonated mine";
-  } else {
-    e.target.className = "detonated neighbor";
-  }
-}
-
-function handleRightClick(e) {
-  e.preventDefault();
-  e.target.className = "brick flag";
-}
-
-/******************************** */
-/* place the bombs */
-/******************************** */
-
+/* create a random point: [x,y] */
 const randomPoint = function(max) {
   return function() {
     let x = Math.floor(Math.random() * Math.floor(max));
@@ -50,6 +26,7 @@ const randomPoint = function(max) {
 }
 const getPoint = randomPoint(fieldSize);
 
+/* create a virtual field  */
 const virtualField = function(size) {
   let field = [];
   for (let i = 0; i < size; i++){
@@ -71,8 +48,28 @@ const virtualField = function(size) {
     }
   }
 }
-const field = virtualField(fieldSize).placeBombs(15).getField();
 
+const field = virtualField(fieldSize).placeBombs(15).getField();
 console.log(field);
+
+/* add event listeners and handlers */
+const table = makeTable(fieldSize);
+table.addEventListener("click", handleClick, false);
+table.addEventListener("contextmenu", handleRightClick, false);
+
+function handleClick(e) {
+  let row = e.target.parentElement.rowIndex;
+  let column = e.target.cellIndex;
+    if (field[row][column] === BOMB_ENUM) {
+    e.target.className = "detonated mine";
+  } else {
+    e.target.className = "detonated neighbor";
+  }
+}
+function handleRightClick(e) {
+  e.preventDefault();
+  e.target.className = "brick flag";
+}
+
 
 
