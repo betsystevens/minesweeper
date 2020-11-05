@@ -61,7 +61,7 @@ function handleClick(e) {
   let row = e.target.parentElement.rowIndex;
   let column = e.target.cellIndex;
     if (field[row][column] === BOMB_ENUM) {
-    e.target.className = "detonated mine";
+    e.target.className = "mine";
   } else {
     e.target.className = "detonated neighbor";
   }
