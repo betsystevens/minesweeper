@@ -3,19 +3,21 @@
 const fieldSize = 5;
 const BOMB_ENUM = 7;
 
-/* add rows of bricks to the dom table */
-function makeTable(size) {
-  const table = document.getElementsByTagName("table")[0];
+/* add rows and cells(bricks) to the dom table */
+const makeTable = function(size, tableID) {
+  let table = document.getElementById(tableID);
   for (let i=0; i<size; i++) {
-    let row = table.insertRow(i);
-    for (let j=0; j<size; j++) {
-      let cell = row.insertCell(j);
-      cell.className = "brick";
-    }
+    insertBricks.call(table.insertRow(), size);
   }
   return table;
 }
 
+// add cells(bricks)to a row
+const insertBricks = function(brickCount){
+  for (let i=0; i<brickCount; i++){
+    this.insertCell().className = "brick";
+  }
+}
 /* create a random point: [x,y] */
 const randomPoint = function(max) {
   return function() {
@@ -53,7 +55,7 @@ const field = virtualField(fieldSize).placeBombs(15).getField();
 console.log(field);
 
 /* add event listeners and handlers */
-const table = makeTable(fieldSize);
+const table = makeTable(fieldSize, "grid");
 table.addEventListener("click", handleClick, false);
 table.addEventListener("contextmenu", handleRightClick, false);
 
@@ -70,6 +72,4 @@ function handleRightClick(e) {
   e.preventDefault();
   e.target.className = "brick flag";
 }
-
-
 
