@@ -1,10 +1,13 @@
+import { game } from './game.js';
+
 'use strict'
 
-const fieldSize = 5;
+const gridSize = 10;
 const BOMB_ENUM = 7;
+const grid = game(gridSize).placeBombs(74, BOMB_ENUM);
 
 /*********** */
-/* dom field */
+/* dom table */
 /*********** */
 
 /* add rows and cells(bricks) to the dom table */
@@ -21,7 +24,7 @@ const insertBricks = function(brickCount){
     this.insertCell().className = "brick";
   }
 }
-const table = makeTable(fieldSize, "grid");
+const table = makeTable(gridSize, "grid");
 
 /* add event listeners and handlers */
 table.addEventListener("click", handleClick, false);
@@ -30,7 +33,7 @@ table.addEventListener("contextmenu", handleRightClick, false);
 function handleClick(e) {
   let row = e.target.parentElement.rowIndex;
   let column = e.target.cellIndex;
-    if (field[row][column] === BOMB_ENUM) {
+    if (grid[row][column] === BOMB_ENUM) {
     e.target.className = "mine";
   } else {
     e.target.className = "detonated neighbor";
@@ -40,44 +43,3 @@ function handleRightClick(e) {
   e.preventDefault();
   e.target.className = "brick flag";
 }
-
-/*************** */
-/* virtual field */
-/*************** */
-
-/* create a random point: [x,y] */
-const randomPoint = function(max) {
-  return function() {
-    let x = Math.floor(Math.random() * Math.floor(max));
-    let y = Math.floor(Math.random() * Math.floor(max));
-    return { x, y };
-  }
-}
-/* create a virtual field  */
-const virtualField = function(size) {
-  let field = [];
-  for (let i = 0; i < size; i++){
-    field.push([]);
-  }
-  const getPoint = randomPoint(fieldSize);
-  return {
-    size, 
-    field,
-    getField() {
-      return this.field;
-    },
-    /* randomly place bombs */
-    placeBombs(bombCount){
-      for (let i=0; i < bombCount; i++) {
-        let p = getPoint();
-        this.field[p.x][p.y] = BOMB_ENUM;
-      }
-      return this;
-    }
-  }
-}
-
-const field = virtualField(fieldSize).placeBombs(15).getField();
-console.log(field);
-
-
