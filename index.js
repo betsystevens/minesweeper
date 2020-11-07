@@ -2,9 +2,9 @@ import { game } from './game.js';
 
 'use strict'
 
-const gridSize = 10;
-const BOMB_ENUM = 7;
-const grid = game(gridSize).placeBombs(74, BOMB_ENUM);
+const gridSize = 7;
+const BOMB_ENUM = "∞";
+const grid = game(gridSize).placeBombs(15, BOMB_ENUM);
 
 /*********** */
 /* dom table */
@@ -37,6 +37,7 @@ function handleClick(e) {
     e.target.className = "mine";
   } else {
     e.target.className = "detonated neighbor";
+    e.target.innerHTML = grid[row][column];
   }
 }
 function handleRightClick(e) {

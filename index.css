@@ -63,9 +63,8 @@ table.game-over table {
 .mine {
   background: #DDD url("./assets/coronavirus.png") no-repeat center;
 }
-.neighbor:before {
+.neighbor {
   color: #222;
-  content: "1";
   font-family: monospace;
   font-size: 24px;
   text-align: center;
