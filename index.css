@@ -3,7 +3,7 @@
   --brickBorderSize: 4px;
   --cellSize: 43px;
   --mineColor: darkred;
-} 
+}
 
 body {
   background: black;
@@ -31,7 +31,7 @@ table {
   margin-bottom: 25px;
 }
 td:hover {
-  background-color: #BBB; 
+  background-color: #bbb;
 }
 table tr:hover {
   color: #333;
@@ -41,11 +41,11 @@ table.game-over table {
 }
 
 .brick {
-  background-color: #999; 
+  background-color: #999;
   height: var(--brickSize);
   width: var(--brickSize);
-  border-top: 4px solid #CCC;
-  border-left: 4px solid #AAA;
+  border-top: 4px solid #ccc;
+  border-left: 4px solid #aaa;
   border-bottom: 4px solid #666;
   border-right: 4px solid #888;
 }
@@ -55,13 +55,13 @@ table.game-over table {
   width: var(--brickSize);
 }
 .detonated {
-  background-color: #DDD; 
+  background-color: #ddd;
   width: var(--cellSize);
   height: var(--cellSize);
   color: transparent;
 }
 .mine {
-  background: #DDD url("./assets/coronavirus.png") no-repeat center;
+  background: #ddd url("./assets/coronavirus.png") no-repeat center;
 }
 .neighbor {
   color: #222;
