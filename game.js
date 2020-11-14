@@ -1,14 +1,17 @@
 "use strict";
 
-const gameGrid = function(size) {
+const gameGrid = function(size, numberOfBombs) {
   /* create two dimensional array filled with 0 */
-  let grid = [];
-  for (let i = 0; i < size; i++) {
-    grid.push([]);
-    for (let j = 0; j < size; j++) {
-      grid[i].push(0);
+  const createGrid = (size) => {
+    let grid = [];
+    for (let i = 0; i < size; i++) {
+      grid.push([]);
+      for (let j = 0; j < size; j++) {
+        grid[i].push(0);
+      }
     }
-  }
+    return grid;
+  };
   /* return a random cell: {row,col} */
   const randomCell = function(max) {
     return function() {
@@ -17,16 +20,17 @@ const gameGrid = function(size) {
       return { row, col };
     };
   };
-  const updateNeighbors = function(cell, BOMB_ENUM) {
-    // update the 8 neighbors of the cell
+  const updateNeighbors = function(bomb, BOMB_ENUM) {
+    // update the 8 neighbors of the bomb
     let neighborRow = [-1, -1, -1, 0, 0, 1, 1, 1];
     let neighborCol = [-1, 0, 1, -1, 1, -1, 0, 1];
+    let cell = {};
     for (let i = 0; i < 8; i++) {
-      let row = neighborRow[i] + cell.row;
-      let col = neighborCol[i] + cell.col;
-      if (isValid(row, col)) {
-        grid[row][col] =
-          grid[row][col] === BOMB_ENUM ? BOMB_ENUM : grid[row][col] + 1;
+      cell.row = neighborRow[i] + bomb.row;
+      cell.col = neighborCol[i] + bomb.col;
+      if (isValid(cell.row, cell.col)) {
+        if (!isBomb(cell))
+          incrementBombCount(cell);
       }
     }
   };
@@ -34,21 +38,32 @@ const gameGrid = function(size) {
   const isValid = function(row, col) {
     return row >= 0 && row < size && col >= 0 && col < size;
   };
-  return {
-    placeBombs: function(numberOfBombs, BOMB_ENUM) {
-      const getCell = randomCell(size);
-      for (let i = 0; i < numberOfBombs; i++) {
-        let cell = getCell();
-        if (grid[cell.row][cell.col] === 0) {
-          grid[cell.row][cell.col] = BOMB_ENUM;
-          updateNeighbors(cell, BOMB_ENUM);
-        } else {
-          console.log(`duplicate bomb ${cell.row} ${cell.col}`);
-        }
-      }
-      return grid;
-    },
+  const isBomb = function(cell) {
+    return grid[cell.row][cell.col] === BOMB_ENUM;
   };
+  const incrementBombCount = function(cell) {
+    setCell(cell, grid[cell.row][cell.col] + 1) 
+  }
+  const setCell = function(cell, value) {
+    grid[cell.row][cell.col] = value;
+  };
+  const placeBombs = function(numberOfBombs, BOMB_ENUM) {
+    const getCell = randomCell(size);
+    for (let i = 0; i < numberOfBombs; i++) {
+      let cell = getCell();
+      if (!isBomb(cell)) {
+        setCell(cell, BOMB_ENUM);
+        updateNeighbors(cell, BOMB_ENUM);
+      } else {
+        console.log(`duplicate bomb ${cell.row} ${cell.col}`);
+      }
+    }
+  };
+
+  let grid = createGrid(size);
+  const BOMB_ENUM = "∞";
+  placeBombs(numberOfBombs, "∞");
+  return grid;
 };
 // console.log(grid);
 export const game = gameGrid;

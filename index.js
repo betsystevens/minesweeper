@@ -3,7 +3,7 @@ import { game } from "./game.js";
 
 const gridSize = 7;
 const BOMB_ENUM = "∞";
-const grid = game(gridSize).placeBombs(15, BOMB_ENUM);
+const grid = game(gridSize, 25);
 let game_over = false;
 
 /*********** */
