@@ -2,14 +2,8 @@
 
 const gameGrid = function(size, numberOfBombs) {
   /* create two dimensional array filled with 0 */
-  const createGrid = (size) => {
-    let grid = [];
-    for (let i = 0; i < size; i++) {
-      grid.push([]);
-      for (let j = 0; j < size; j++) {
-        grid[i].push(0);
-      }
-    }
+ const createGrid = (size) => {
+    let grid = [ ...Array(size)].map(() => [ ...Array(size)].map(() => 0) );
     return grid;
   };
   /* return a random cell: {row,col} */
@@ -55,15 +49,19 @@ const gameGrid = function(size, numberOfBombs) {
         setCell(cell, BOMB_ENUM);
         updateNeighbors(cell, BOMB_ENUM);
       } else {
-        console.log(`duplicate bomb ${cell.row} ${cell.col}`);
+        console.count(`duplicate bomb ${cell.row} ${cell.col}`);
       }
     }
   };
 
   let grid = createGrid(size);
+
   const BOMB_ENUM = "∞";
   placeBombs(numberOfBombs, "∞");
   return grid;
 };
-// console.log(grid);
+// es6 import / export
 export const game = gameGrid;
+
+// unit testing without esm (es6 modules)
+// module.exports.game = gameGrid;
