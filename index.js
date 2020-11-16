@@ -1,9 +1,9 @@
 "use strict";
 import { game } from "./game.js";
 
-const gridSize = 7;
+const gridSize = 10;
 const BOMB_ENUM = "∞";
-const grid = game(gridSize, 25);
+const grid = game(gridSize, 15);
 let game_over = false;
 
 /*********** */
@@ -45,3 +45,20 @@ function handleRightClick(e) {
   e.preventDefault();
   e.target.className = "brick flag";
 }
+
+let button = document.getElementById("open");
+button.addEventListener("click", function(){
+  let rows = document.getElementsByTagName("tr");
+  for (let i = 0; i < rows.length; i++) {
+    for (let j = 0; j < gridSize; j++ ) {
+      let cell = rows[i].getElementsByTagName("td")[j];
+      if (grid[i][j] === BOMB_ENUM) {
+        cell.className = "mine";
+        game_over = true;
+      } else {
+        cell.className = "detonated neighbor";
+        cell.innerHTML = grid[i][j];
+      }
+    }
+  }
+})
