@@ -3,7 +3,7 @@
 const gameGrid = function(size, numberOfBombs) {
   /* create two dimensional array filled with 0 */
  const createGrid = (size) => {
-    let grid = [ ...Array(size)].map(() => [ ...Array(size)].map(() => 0) );
+    let grid = [ ...Array(size)].map(() => Array(size).fill(0) );
     return grid;
   };
   /* return a random cell: {row,col} */
