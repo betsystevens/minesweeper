@@ -30,14 +30,16 @@ const gameGrid = function(size, numberOfBombs) {
     const neighbor = generateNeighbor(bomb);
     for (let i = 0; i < 8; i++) {
       let cell = neighbor.next().value;
-      if (isValid(cell.row, cell.col)) {
+      if (isValid(cell)) {
         if (!isBomb(cell))
           incrementBombCount(cell);
       }
     }
   };
   /* check out of bounds of grid */
-  const isValid = function(row, col) {
+  const isValid = function(cell) {
+    let row = cell.row;
+    let col = cell.col;
     return row >= 0 && row < size && col >= 0 && col < size;
   };
   const isBomb = function(cell) {
