@@ -14,14 +14,22 @@ const gameGrid = function(size, numberOfBombs) {
       return { row, col };
     };
   };
+  function* generateNeighbor(cell) {
+    // generate 8 neighbors of cell
+    let neighborRow = [-1, -1, -1, 0, 1, 1, 1, 0];
+    let neighborCol = [-1, 0, 1, 1, 1, 0, -1, -1];
+    for (let i = 0; i < 8; i++) {
+      yield { 
+        row: neighborRow[i] + cell.row,
+        col: neighborCol[i] + cell.col
+       }
+    }
+  }
   const updateNeighbors = function(bomb, BOMB_ENUM) {
     // update the 8 neighbors of the bomb
-    let neighborRow = [-1, -1, -1, 0, 0, 1, 1, 1];
-    let neighborCol = [-1, 0, 1, -1, 1, -1, 0, 1];
-    let cell = {};
+    const neighbor = generateNeighbor(bomb);
     for (let i = 0; i < 8; i++) {
-      cell.row = neighborRow[i] + bomb.row;
-      cell.col = neighborCol[i] + bomb.col;
+      let cell = neighbor.next().value;
       if (isValid(cell.row, cell.col)) {
         if (!isBomb(cell))
           incrementBombCount(cell);
