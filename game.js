@@ -14,7 +14,8 @@ const gameGrid = function(size, numberOfBombs) {
       return { row, col };
     };
   };
-  function* generateNeighbor(cell) {
+  // function* generateNeighbor(cell) {
+  const generateNeighbor = function* (cell) {
     // generate 8 neighbors of cell
     let neighborRow = [-1, -1, -1, 0, 1, 1, 1, 0];
     let neighborCol = [-1, 0, 1, 1, 1, 0, -1, -1];
@@ -25,7 +26,7 @@ const gameGrid = function(size, numberOfBombs) {
        }
     }
   }
-  const updateNeighbors = function(bomb, BOMB_ENUM) {
+  const updateNeighbors = function(bomb) {
     // update the 8 neighbors of the bomb
     const neighbor = generateNeighbor(bomb);
     for (let i = 0; i < 8; i++) {
@@ -42,34 +43,45 @@ const gameGrid = function(size, numberOfBombs) {
     let col = cell.col;
     return row >= 0 && row < size && col >= 0 && col < size;
   };
+  const isZero = function(cell) {
+    return grid[cell.row][cell.col] === 0;
+  };
   const isBomb = function(cell) {
     return grid[cell.row][cell.col] === BOMB_ENUM;
   };
   const incrementBombCount = function(cell) {
-    setCell(cell, grid[cell.row][cell.col] + 1) 
+    setValue(cell, grid[cell.row][cell.col] + 1) 
   }
-  const setCell = function(cell, value) {
+  const setValue = function(cell, value) {
     grid[cell.row][cell.col] = value;
   };
-  const placeBombs = function(numberOfBombs, BOMB_ENUM) {
-    const getCell = randomCell(size);
+  const getValue = function(cell) {
+    return grid[cell.row][cell.col];
+  };
+  const placeBombs = function(numberOfBombs) {
+    const getRandomCell = randomCell(size);
     for (let i = 0; i < numberOfBombs; i++) {
-      let cell = getCell();
+      let cell = getRandomCell();
       if (!isBomb(cell)) {
-        setCell(cell, BOMB_ENUM);
-        updateNeighbors(cell, BOMB_ENUM);
-      } else {
-        console.count(`duplicate bomb ${cell.row} ${cell.col}`);
+        setValue(cell, BOMB_ENUM);
+        updateNeighbors(cell);
       }
     }
   };
-
-  let grid = createGrid(size);
-
+  
   const BOMB_ENUM = "∞";
+  let grid = createGrid(size);
   placeBombs(numberOfBombs, "∞");
-  return grid;
+
+  return {
+    grid: grid,
+    isBomb: isBomb,
+    isZero: isZero,
+    getValue: getValue,
+    generateNeighbor : generateNeighbor
+  }
 };
+
 // es6 import / export
 export const game = gameGrid;
 
