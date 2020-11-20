@@ -14,6 +14,14 @@ body {
   align-items: center;
 }
 
+h2 {
+  padding: 20px;
+  margin-top: 25px;
+  background: #777;
+  border: 1px solid #999;
+  border-radius: 25%;
+  color: #222;
+}
 table td {
   width: var(--cellSize);
   height: var(--cellSize);
@@ -26,20 +34,27 @@ table td {
   background-color: white;
 }
 table {
+  border-spacing: 0;
   user-select: none;
   padding: 0;
   margin-bottom: 25px;
 }
-td:hover {
+td.brick:hover {
   background-color: #bbb;
-}
-table tr:hover {
-  color: #333;
 }
 table.game-over table {
   pointer-events: none;
 }
-
+.expand {
+  border-spacing: 0;
+  background-color: #ddd;
+  height: var(--cellSize);
+  width: var(--cellSize);
+  color: #222;
+  font-family: monospace;
+  font-size: 24px;
+  text-align: center;
+}
 .brick {
   background-color: #999;
   height: var(--brickSize);
@@ -61,6 +76,8 @@ table.game-over table {
   color: transparent;
 }
 .mine {
+  width: var(--cellSize); 
+  height: var(--cellSize); 
   background: #ddd url("./assets/coronavirus.png") no-repeat center;
 }
 .neighbor {
