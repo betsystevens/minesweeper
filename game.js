@@ -60,23 +60,28 @@ const gameGrid = function(size, numberOfBombs) {
   };
   const placeBombs = function(numberOfBombs) {
     const getRandomCell = randomCell(size);
+    let count = 0;
     for (let i = 0; i < numberOfBombs; i++) {
       let cell = getRandomCell();
       if (!isBomb(cell)) {
+        count++;
         setValue(cell, BOMB_ENUM);
         updateNeighbors(cell);
       }
     }
+    return count;
   };
   
   const BOMB_ENUM = "∞";
   let grid = createGrid(size);
-  placeBombs(numberOfBombs, "∞");
+  let bombCount = placeBombs(numberOfBombs, "∞");
 
   return {
     grid: grid,
+    bombCount: bombCount,
     isBomb: isBomb,
     isZero: isZero,
+    isValid: isValid,
     getValue: getValue,
     generateNeighbor : generateNeighbor
   }
