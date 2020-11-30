@@ -43,7 +43,7 @@ const gameGrid = function(size, numberOfBombs) {
     let col = cell.col;
     return row >= 0 && row < size && col >= 0 && col < size;
   };
-  const isZero = function(cell) {
+  const isNeutral = function(cell) {
     return grid[cell.row][cell.col] === 0;
   };
   const isBomb = function(cell) {
@@ -80,7 +80,7 @@ const gameGrid = function(size, numberOfBombs) {
     grid: grid,
     bombCount: bombCount,
     isBomb: isBomb,
-    isZero: isZero,
+    isNeutral: isNeutral,
     isValid: isValid,
     getValue: getValue,
     generateNeighbor : generateNeighbor

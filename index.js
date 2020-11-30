@@ -8,6 +8,7 @@ let game_over = false;
 
 const header = document.getElementsByTagName("h2")[0];
 header.innerHTML = "Find " + bombCount + " bombs";
+
 /* add rows and cells(bricks) to the dom table */
 const makeTable = function(size, tableID) {
   let table = document.getElementById(tableID);
@@ -25,10 +26,10 @@ const insertBricks = function(brickCount) {
 const table = makeTable(gridSize, "grid");
 
 /* add event listeners and handlers */
-table.addEventListener("click", handleClick, false);
-table.addEventListener("contextmenu", handleRightClick, false);
+table.addEventListener("click", brickClickedHandler, false);
+table.addEventListener("contextmenu", flagHandler, false);
 
-function getZeroCells(cell) {
+function getNeutralCells(cell) {
   let visited = [...Array(gridSize*gridSize)].fill(false);
   let openCells = [];
   openCells.push(cell);
@@ -50,7 +51,7 @@ function getZeroCells(cell) {
       if ( (myGame.isValid(adjacentCell)) && (!isVisited(adjacentCell)) ) {
         markVisited(adjacentCell);
         openCells.push(adjacentCell);
-        if (myGame.isZero(adjacentCell)) {
+        if (myGame.isNeutral(adjacentCell)) {
           stack.push(adjacentCell);
         }
       }
@@ -62,17 +63,17 @@ function getZeroCells(cell) {
   }
   return openCells;
 }
-function updateClass(cells, foo) {
+function updateClass(cells, className) {
   let table = document.getElementById("grid");
   cells.forEach((cell) => {
     let row = cell.row;
     let col = cell.col;
     let value = myGame.getValue(cell);
     table.rows[row].cells[col].innerHTML = (value !== 0) ? value : "";
-    table.rows[row].cells[col].className = foo; 
+    table.rows[row].cells[col].className = className; 
   })
 };
-function handleClick(e) {
+function brickClickedHandler(e) {
   let row = e.target.parentElement.rowIndex;
   let col = e.target.cellIndex;
   let cell = { row: row, col: col};
@@ -80,8 +81,8 @@ function handleClick(e) {
     e.target.className = "mine";
     game_over = true;
   } else {
-      if (myGame.isZero(cell)) {
-        let openCells = getZeroCells(cell);
+      if (myGame.isNeutral(cell)) {
+        let openCells = getNeutralCells(cell);
         console.table(openCells);
         updateClass(openCells, "expand");
     } else {
@@ -90,13 +91,13 @@ function handleClick(e) {
     }
   }
 }
-function handleRightClick(e) {
+function flagHandler(e) {
   e.preventDefault();
-  e.target.className = "brick flag";
+  e.target.className = (e.target.className === "brick") ? "brick flag" : "brick";
 }
 
 //≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈
-// testing open all cells 
+// reveal button open all cells 
 let button = document.getElementById("reveal");
 button.addEventListener("click", function(){
   let rows = document.getElementsByTagName("tr");
@@ -109,7 +110,7 @@ button.addEventListener("click", function(){
         tableCell.className = "mine";
         game_over = true;
       } else {
-        if (myGame.isZero(cell)) {
+        if (myGame.isNeutral(cell)) {
           tableCell.className = "expand";
         } else {
           tableCell.className = "detonated neighbor";
