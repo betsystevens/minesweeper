@@ -31,8 +31,8 @@ table.addEventListener("contextmenu", flagHandler, false);
 
 function getCellsToOpen(cell) {
   // open cells that have 0 bomb neighbors and the wall of 
-  // number cells that surrounds these neutral cells
-  // track of cells as they are processed
+  //   numbered cells that surround these neutral cells
+  // track cells as they are processed
   let visited = [...Array(gridSize*gridSize)].fill(false);
   const markVisited = function(cell) {
     let index = cell.row * gridSize + cell.col;
@@ -44,8 +44,7 @@ function getCellsToOpen(cell) {
     let index = cell.row * gridSize + cell.col;
     return visited[index] === true;
   }
-  // 
-  // track of neutral cells so their neighbors can be processed
+  // track neutral cells so their neighbors can be processed
   let neutrals = [];
   neutrals.push(cell)
 
