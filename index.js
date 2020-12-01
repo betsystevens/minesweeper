@@ -32,6 +32,8 @@ table.addEventListener("contextmenu", flagHandler, false);
 function getCellsToOpen(cell) {
   // open cells that have 0 bomb neighbors and the wall of 
   //   numbered cells that surround these neutral cells
+  let cellsToOpen = [];
+  cellsToOpen.push(cell);
   // track cells as they are processed
   let visited = [...Array(gridSize*gridSize)].fill(false);
   const markVisited = function(cell) {
@@ -39,7 +41,6 @@ function getCellsToOpen(cell) {
     visited[index] = true;
   }
   markVisited(cell);
-  
   const isVisited = function(cell) {
     let index = cell.row * gridSize + cell.col;
     return visited[index] === true;
@@ -47,13 +48,11 @@ function getCellsToOpen(cell) {
   // track neutral cells so their neighbors can be processed
   let neutrals = [];
   neutrals.push(cell)
-
   // valid, unvisited neighbors will be opened, mark as visited 
-  // a neighbor's neutral neighbors will need to be processed, save them 
   while (neutrals.length !== 0 ) {
     cell = neutrals.pop();
     const neighbor = myGame.generateNeighbor(cell);
-
+    
     let neighbors = [...Array(8)].map(() => neighbor.next().value);
     neighbors = neighbors.filter(neighborCell => myGame.isValid(neighborCell));
     neighbors = neighbors.filter(neighborCell => !isVisited(neighborCell));
@@ -61,6 +60,7 @@ function getCellsToOpen(cell) {
       markVisited(neighborCell);
       cellsToOpen.push(neighborCell);
     });
+    // a neighbor's neutral neighbors will need to be processed, save them 
     neighbors = neighbors.filter(neighborCell => (myGame.isNeutral(neighborCell)));
     neighbors.forEach((neighborCell => { neutrals.push(neighborCell) }));
   }
