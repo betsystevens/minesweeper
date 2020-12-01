@@ -29,12 +29,11 @@ const table = makeTable(gridSize, "grid");
 table.addEventListener("click", brickClickedHandler, false);
 table.addEventListener("contextmenu", flagHandler, false);
 
-function getNeutralCells(cell) {
+function getCellsToOpen(cell) {
   // return all cells that will be opened
-  // all cells that have 0 bomb neighbors and the wall of 
-  // number cells that will surround the neutral cells
-  let cellsToOpen = [];
-  cellsToOpen.push(cell);
+  // will open cells that have 0 bomb neighbors and the wall of 
+  // number cells that surrounds these neutral cells
+
   // keep track of cells as they are processed
   let visited = [...Array(gridSize*gridSize)].fill(false);
   const markVisited = function(cell) {
@@ -49,28 +48,28 @@ function getNeutralCells(cell) {
   }
   // 
   // keep track of neutral cells so their neighbors can be processed
-  let stack = [];
-  stack.push(cell)
-  let done = false;
+  let neutrals = [];
+  neutrals.push(cell)
 
-  // process each valid neighbor of cell, up to 8 neighbors
-  // if a neighbor hasn't already been visited mark as visited
+  // process each valid neighbor of cell that has yet to be visited
+  // up to 8 neighbors
+  // mark neighbors as visited
   // the neighbor's neutral neighbors will need to be processed, save it
   // look at making this recursive
   //
-  while (stack.length !==0 ) {
-    cell = stack.pop();
+  while (neutrals.length !== 0 ) {
+    cell = neutrals.pop();
     const neighbor = myGame.generateNeighbor(cell);
-    for (let i = 0; i < 8; i++) {
-      let adjacentCell = neighbor.next().value;
-      if ( (myGame.isValid(adjacentCell)) && (!isVisited(adjacentCell)) ) {
-        markVisited(adjacentCell);
-        cellsToOpen.push(adjacentCell);
-        if (myGame.isNeutral(adjacentCell)) {
-          stack.push(adjacentCell);
-        }
-      }
-    }
+
+    let neighbors = [...Array(8)].map(() => neighbor.next().value);
+    neighbors = neighbors.filter(neighborCell => myGame.isValid(neighborCell));
+    neighbors = neighbors.filter(neighborCell => !isVisited(neighborCell));
+    neighbors.forEach((neighborCell) => {
+      markVisited(neighborCell);
+      cellsToOpen.push(neighborCell);
+    });
+    neighbors = neighbors.filter(neighborCell => (myGame.isNeutral(neighborCell)));
+    neighbors.forEach((neighborCell => { neutrals.push(neighborCell) }));
   }
   return cellsToOpen;
 }
@@ -97,7 +96,7 @@ function brickClickedHandler(e) {
     // neutral cell(s) will need to be processed
   } else {
       if (myGame.isNeutral(cell)) {
-        let cellsToOpen = getNeutralCells(cell);
+        let cellsToOpen = getCellsToOpen(cell);
         console.table(cellsToOpen);
         updateClass(cellsToOpen, "expand");
     } else {
