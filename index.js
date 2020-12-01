@@ -17,7 +17,7 @@ const makeTable = function(size, tableID) {
   }
   return table;
 };
-// add cells(bricks)to a row
+// add cells(bricks)to a row in the table
 const insertBricks = function(brickCount) {
   for (let i = 0; i < brickCount; i++) {
     this.insertCell().className = "brick";
@@ -30,11 +30,9 @@ table.addEventListener("click", brickClickedHandler, false);
 table.addEventListener("contextmenu", flagHandler, false);
 
 function getCellsToOpen(cell) {
-  // return all cells that will be opened
-  // will open cells that have 0 bomb neighbors and the wall of 
+  // open cells that have 0 bomb neighbors and the wall of 
   // number cells that surrounds these neutral cells
-
-  // keep track of cells as they are processed
+  // track of cells as they are processed
   let visited = [...Array(gridSize*gridSize)].fill(false);
   const markVisited = function(cell) {
     let index = cell.row * gridSize + cell.col;
@@ -47,16 +45,12 @@ function getCellsToOpen(cell) {
     return visited[index] === true;
   }
   // 
-  // keep track of neutral cells so their neighbors can be processed
+  // track of neutral cells so their neighbors can be processed
   let neutrals = [];
   neutrals.push(cell)
 
-  // process each valid neighbor of cell that has yet to be visited
-  // up to 8 neighbors
-  // mark neighbors as visited
-  // the neighbor's neutral neighbors will need to be processed, save it
-  // look at making this recursive
-  //
+  // valid, unvisited neighbors will be opened, mark as visited 
+  // a neighbor's neutral neighbors will need to be processed, save them 
   while (neutrals.length !== 0 ) {
     cell = neutrals.pop();
     const neighbor = myGame.generateNeighbor(cell);
