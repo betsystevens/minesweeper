@@ -30,38 +30,49 @@ table.addEventListener("click", brickClickedHandler, false);
 table.addEventListener("contextmenu", flagHandler, false);
 
 function getNeutralCells(cell) {
+  // return all cells that will be opened
+  // all cells that have 0 bomb neighbors and the wall of 
+  // number cells that will surround the neutral cells
+  let cellsToOpen = [];
+  cellsToOpen.push(cell);
+  // keep track of cells as they are processed
   let visited = [...Array(gridSize*gridSize)].fill(false);
-  let openCells = [];
-  openCells.push(cell);
   const markVisited = function(cell) {
     let index = cell.row * gridSize + cell.col;
     visited[index] = true;
   }
   markVisited(cell);
+  
   const isVisited = function(cell) {
     let index = cell.row * gridSize + cell.col;
     return visited[index] === true;
   }
+  // 
+  // keep track of neutral cells so their neighbors can be processed
   let stack = [];
+  stack.push(cell)
   let done = false;
-  while (!done) {
+
+  // process each valid neighbor of cell, up to 8 neighbors
+  // if a neighbor hasn't already been visited mark as visited
+  // the neighbor's neutral neighbors will need to be processed, save it
+  // look at making this recursive
+  //
+  while (stack.length !==0 ) {
+    cell = stack.pop();
     const neighbor = myGame.generateNeighbor(cell);
     for (let i = 0; i < 8; i++) {
-      let adjacentCell  = neighbor.next().value;
+      let adjacentCell = neighbor.next().value;
       if ( (myGame.isValid(adjacentCell)) && (!isVisited(adjacentCell)) ) {
         markVisited(adjacentCell);
-        openCells.push(adjacentCell);
+        cellsToOpen.push(adjacentCell);
         if (myGame.isNeutral(adjacentCell)) {
           stack.push(adjacentCell);
         }
       }
     }
-    if (stack.length === 0) done = true;
-    else {
-      cell = stack.pop();
-    }
   }
-  return openCells;
+  return cellsToOpen;
 }
 function updateClass(cells, className) {
   let table = document.getElementById("grid");
@@ -74,17 +85,21 @@ function updateClass(cells, className) {
   })
 };
 function brickClickedHandler(e) {
+  // get cell that was clicked
   let row = e.target.parentElement.rowIndex;
   let col = e.target.cellIndex;
   let cell = { row: row, col: col};
+  // if bomb, game over
+  // maybe switch bomb, neutral, number
   if (myGame.isBomb(cell)) {
     e.target.className = "mine";
     game_over = true;
+    // neutral cell(s) will need to be processed
   } else {
       if (myGame.isNeutral(cell)) {
-        let openCells = getNeutralCells(cell);
-        console.table(openCells);
-        updateClass(openCells, "expand");
+        let cellsToOpen = getNeutralCells(cell);
+        console.table(cellsToOpen);
+        updateClass(cellsToOpen, "expand");
     } else {
       e.target.className = "detonated neighbor";
       e.target.innerHTML = myGame.getValue(cell);
