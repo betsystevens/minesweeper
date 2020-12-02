@@ -14,7 +14,6 @@ const gameGrid = function(size, numberOfBombs) {
       return { row, col };
     };
   };
-  // function* generateNeighbor(cell) {
   const generateNeighbor = function* (cell) {
     // generate 8 neighbors of cell
     let neighborRow = [-1, -1, -1, 0, 1, 1, 1, 0];
@@ -44,10 +43,10 @@ const gameGrid = function(size, numberOfBombs) {
     return row >= 0 && row < size && col >= 0 && col < size;
   };
   const isNeutral = function(cell) {
-    return grid[cell.row][cell.col] === 0;
+    return grid[cell.row][cell.col] === enums.NEUTRAL;
   };
   const isBomb = function(cell) {
-    return grid[cell.row][cell.col] === BOMB_ENUM;
+    return grid[cell.row][cell.col] === enums.BOMB;
   };
   const incrementBombCount = function(cell) {
     setValue(cell, grid[cell.row][cell.col] + 1) 
@@ -65,16 +64,19 @@ const gameGrid = function(size, numberOfBombs) {
       let cell = getRandomCell();
       if (!isBomb(cell)) {
         count++;
-        setValue(cell, BOMB_ENUM);
+        setValue(cell, enums.BOMB);
         updateNeighbors(cell);
       }
     }
     return count;
   };
-  
-  const BOMB_ENUM = "∞";
+ 
+  const enums = {
+    BOMB: "∞",
+    NEUTRAL: 0,
+  }
   let grid = createGrid(size);
-  let bombCount = placeBombs(numberOfBombs, "∞");
+  let bombCount = placeBombs(numberOfBombs, enums.BOMB);
 
   return {
     grid: grid,
