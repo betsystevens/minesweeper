@@ -1,6 +1,5 @@
 "use strict";
 import { game } from "./game.js";
-
 const gridSize = 12;
 const myGame = game(gridSize, 20);
 const bombCount = myGame.bombCount;
@@ -8,7 +7,6 @@ let game_over = false;
 
 const header = document.getElementsByTagName("h2")[0];
 header.innerHTML = "Find " + bombCount + " bombs";
-
 /* add rows and cells(bricks) to the dom table */
 const makeTable = function(size, tableID) {
   let table = document.getElementById(tableID);
@@ -81,22 +79,18 @@ function brickClickedHandler(e) {
   let row = e.target.parentElement.rowIndex;
   let col = e.target.cellIndex;
   let cell = { row: row, col: col};
-  // if bomb, game over
-  // maybe switch bomb, neutral, number
-  if (myGame.isBomb(cell)) {
-    e.target.className = "mine";
-    game_over = true;
-    // neutral cell(s) will need to be processed
-  } else {
-      if (myGame.isNeutral(cell)) {
-        let cellsToOpen = getCellsToOpen(cell);
-        console.table(cellsToOpen);
-        updateClass(cellsToOpen, "expand");
-    } else {
+  switch(myGame.getValue(cell)) {
+    case myGame.enums.BOMB:
+      e.target.className = "mine";
+      game_over = true;
+      break;
+    case myGame.enums.NEUTRAL:
+      updateClass(getCellsToOpen(cell), "expand");
+      break;
+    default:
       e.target.className = "detonated neighbor";
       e.target.innerHTML = myGame.getValue(cell);
-    }
-  }
+  } 
 }
 function flagHandler(e) {
   e.preventDefault();
