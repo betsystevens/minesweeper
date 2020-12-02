@@ -81,6 +81,7 @@ const gameGrid = function(size, numberOfBombs) {
   return {
     grid: grid,
     bombCount: bombCount,
+    enums: enums,
     isBomb: isBomb,
     isNeutral: isNeutral,
     isValid: isValid,
